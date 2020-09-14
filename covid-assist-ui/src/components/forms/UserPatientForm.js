@@ -57,6 +57,7 @@ function UserPatientForm() {
   }, [watchFields.needAmbulanceService, watchFields.lookingForHospitals]);
 
   const onSubmit = (data) => {
+    console.table(data);
     console.log(JSON.stringify(data));
   };
 

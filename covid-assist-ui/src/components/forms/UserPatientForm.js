@@ -63,7 +63,10 @@ function UserPatientForm() {
     setValue,
   } = useForm({
     criteriaMode: "all",
-    defaultValues: {},
+    defaultValues: {
+      lattitude: position?.coords?.latitude,
+      longitude: position?.coords?.longitude,
+    },
   });
   const getAllCovidSymptomsApi = useApi(
     allCovidSymptonsApi.getAllCovidSymptoms
@@ -72,7 +75,7 @@ function UserPatientForm() {
     allMedicalConditionApi.getAllMedicalConditions
   );
   const savePatientDataApi = useApi(savePatientApi.savePatient);
-  const watchFields = watch(["needAmbulanceService", "lookingForHospitals"]);
+  const watchFields = watch(["ambulanceRequired", "hospitalRequired"]);
 
   useEffect(() => {
     getAllCovidSymptomsApi.request();
@@ -93,7 +96,10 @@ function UserPatientForm() {
     const payload = getSavePatientPayload(data);
     console.log(JSON.stringify(data));
     const result = await savePatientDataApi.request(payload);
-    reset();
+    reset({
+      lattitude: position?.coords?.latitude,
+      longitude: position?.coords?.longitude,
+    });
     console.log({ result });
   };
 
@@ -122,7 +128,6 @@ function UserPatientForm() {
                 variant="filled"
                 inputRef={register({
                   required: MESSAGES.errorNoBlank,
-                  maxLength: 20,
                 })}
                 error={errors.name}
                 helperText={errors.name?.message}
@@ -248,7 +253,7 @@ function UserPatientForm() {
             <Grid item xs={12}>
               <FormControl
                 component="fieldset"
-                error={errors.needAmbulanceService}
+                error={errors.hospitalRequired}
                 required
               >
                 <FormLabel component="legend" required>
@@ -262,7 +267,7 @@ function UserPatientForm() {
                         inputRef={register({
                           validate: (value) =>
                             value ||
-                            watchFields.lookingForHospitals ||
+                            watchFields.hospitalRequired ||
                             "Do you need Ambulance Service or Are you looking for Hospitals. One among these two fields must be selected as Yes.",
                         })}
                         required
@@ -277,10 +282,7 @@ function UserPatientForm() {
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <FormControl
-                component="fieldset"
-                error={errors.lookingForHospitals}
-              >
+              <FormControl component="fieldset" error={errors.hospitalRequired}>
                 <FormLabel component="legend" required>
                   {LABELS.questionLookupHospitals}
                 </FormLabel>
@@ -292,7 +294,7 @@ function UserPatientForm() {
                         inputRef={register({
                           validate: (value) =>
                             value ||
-                            watchFields.needAmbulanceService ||
+                            watchFields.ambulanceRequired ||
                             "Do you need Ambulance Service or Are you looking for Hospitals. One among these two fields must be selected as Yes.",
                         })}
                         required

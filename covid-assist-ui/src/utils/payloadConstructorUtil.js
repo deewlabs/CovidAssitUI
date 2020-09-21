@@ -23,9 +23,9 @@ export const getSavePatientPayload = ({
     address,
     lattitude: Number(lattitude),
     longitude: Number(longitude),
-    internationalTravel: internationalTravel ? "yes" : null,
-    ambulanceRequired: ambulanceRequired ? "yes" : null,
-    hospitalRequired: hospitalRequired ? "yes" : null,
+    internationalTravel: internationalTravel ? "yes" : "no",
+    ambulanceRequired: ambulanceRequired ? "yes" : "no",
+    hospitalRequired: hospitalRequired ? "yes" : "no",
     medicalCondition: Object.entries(rest)
       .filter(([key, value]) => key.includes("medicalCondition-") && value)
       .map(([key, value]) => key.split("-").pop())
@@ -36,7 +36,7 @@ export const getSavePatientPayload = ({
       .join(","),
   };
   return `?${Object.entries(payload)
-    .filter(([key, value]) => value)
+    // .filter(([key, value]) => value)
     .map(([key, value]) => `${key}=${value}`)
     .join("&")}`;
 };

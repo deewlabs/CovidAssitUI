@@ -36,7 +36,7 @@ export const getSavePatientPayload = ({
       .join(","),
   };
   return `?${Object.entries(payload)
-    // .filter(([key, value]) => value)
+    .filter(([key, value]) => value)
     .map(([key, value]) => `${key}=${value}`)
     .join("&")}`;
 };

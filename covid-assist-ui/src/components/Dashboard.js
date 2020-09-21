@@ -39,5 +39,7 @@ function formatResponseForGroupChart(data) {
     { name: "Oxygen Cylinder Serviced", value: data.oxygenCylinderServiced },
     { name: "Ventilator Not Serviced", value: data.ventilatorNotServiced },
     { name: "Ventilator Serviced", value: data.ventilatorServiced },
+    { name: "Total Covid Tests Conducted", value : data.totalCovidTests},
+    { name: "Total Positive Cases", value : data.totalPositiveTests}
   ];
 }

@@ -126,7 +126,7 @@ function HospitalReistrationForm() {
                 id="numberOfAmbulance"
                 label={LABELS.numberOfAmbulance}
                 variant="filled"
-                name="totalAmbulance"
+                name="numberOfAmbulance"
                 fullWidth
                 disabled={!position}
                 inputRef={register({
@@ -136,8 +136,8 @@ function HospitalReistrationForm() {
                     message: MESSAGES.errorOnlyNumberAllowed,
                   },
                 })}
-                error={errors.totalAmbulance}
-                helperText={errors.totalAmbulance?.message}
+                error={errors.numberOfAmbulance}
+                helperText={errors.numberOfAmbulance?.message}
                 InputLabelProps={{
                   shrink: true,
                 }}

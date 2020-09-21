@@ -41,4 +41,5 @@ export default Object.freeze({
   diseaseHeartDisease: "Heart disease",
   lattitude: "Latitude",
   longitude: "Longitude",
+  dasboard: "Dashboard",
 });

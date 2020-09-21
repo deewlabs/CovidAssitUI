@@ -55,6 +55,7 @@ function Header({ history, location }) {
       <div className={classes.list} role="presentation">
         <List>
           {[
+            { label: LABELS.dasboard, pathname: "/dashboard" },
             { label: LABELS.listPatientForm, pathname: "/user-patient" },
             {
               label: LABELS.listHospitalReg,

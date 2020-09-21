@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter, Route, Link, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 
 import UserPatientForm from "./components/forms/UserPatientForm";
 import HospitalReistrationForm from "./components/forms/HospitalReistrationForm";
@@ -16,7 +16,8 @@ function App() {
         <Header />
         <SideDrawer />
         <Switch>
-          <Route path="/" exact component={Dashboard} />
+          <Route path="/" exact render={() => <Redirect to="/dashboard" />} />
+          <Route path="/dashboard" component={Dashboard} />
           <Route path="/user-patient" component={UserPatientForm} />
           <Route
             path="/hospital-registration"

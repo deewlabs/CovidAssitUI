@@ -39,4 +39,6 @@ export default Object.freeze({
   diseaseHypertension: "Hypertension",
   diseaseLungDisease: "Lung disease",
   diseaseHeartDisease: "Heart disease",
+  lattitude: "Latitude",
+  longitude: "Longitude",
 });

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -25,6 +25,9 @@ import useGeoLocation from "./../hooks/useGeoLocation";
 import ErrorBanner from "./../ErrorBanner";
 import LABELS from "../../const/labels";
 import MESSAGES from "../../const/messages";
+import saveHospitalApi from "../../api/saveHospital";
+import useApi from "./../hooks/useApi";
+import { getSaveHospitalPayload } from "../../utils/payloadConstructorUtil";
 
 const useStyles = makeStyles((theme) => ({
   buttonGrp: {
@@ -45,14 +48,24 @@ const useStyles = makeStyles((theme) => ({
 function HospitalReistrationForm() {
   const classes = useStyles();
   const { position, error } = useGeoLocation();
-  const { handleSubmit, register, errors, reset } = useForm({
+  const { handleSubmit, register, errors, reset, setValue } = useForm({
     criteriaMode: "all",
     defaultValues: {},
   });
 
-  const onSubmit = (data) => {
+  const saveHospitalDataApi = useApi(saveHospitalApi.saveHospital);
+
+  useEffect(() => {
+    setValue("lattitude", position?.coords?.latitude);
+    setValue("longitude", position?.coords?.longitude);
+  }, [position]);
+
+  const onSubmit = async (data) => {
     console.table(data);
-    console.log(JSON.stringify(data));
+    const payload = getSaveHospitalPayload(data);
+    const result = await saveHospitalDataApi.request(payload);
+    reset();
+    console.log({ result });
   };
 
   return (
@@ -97,7 +110,7 @@ function HospitalReistrationForm() {
                   <FormControlLabel
                     control={
                       <Switch
-                        name="availableServiceAmbulance"
+                        name="ambulanceServiceAvailable"
                         inputRef={register}
                         required
                         disabled={!position}
@@ -113,7 +126,7 @@ function HospitalReistrationForm() {
                 id="numberOfAmbulance"
                 label={LABELS.numberOfAmbulance}
                 variant="filled"
-                name="numberOfAmbulance"
+                name="totalAmbulance"
                 fullWidth
                 disabled={!position}
                 inputRef={register({
@@ -123,8 +136,8 @@ function HospitalReistrationForm() {
                     message: MESSAGES.errorOnlyNumberAllowed,
                   },
                 })}
-                error={errors.numberOfAmbulance}
-                helperText={errors.numberOfAmbulance?.message}
+                error={errors.totalAmbulance}
+                helperText={errors.totalAmbulance?.message}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -155,7 +168,7 @@ function HospitalReistrationForm() {
                 id="numberIsolationBeds"
                 label={LABELS.numberIsolationBeds}
                 variant="filled"
-                name="numberIsolationBeds"
+                name="totalIsolationBed"
                 fullWidth
                 disabled={!position}
                 inputRef={register({
@@ -165,8 +178,8 @@ function HospitalReistrationForm() {
                     message: MESSAGES.errorOnlyNumberAllowed,
                   },
                 })}
-                error={errors.numberIsolationBeds}
-                helperText={errors.numberIsolationBeds?.message}
+                error={errors.totalIsolationBed}
+                helperText={errors.totalIsolationBed?.message}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -178,7 +191,7 @@ function HospitalReistrationForm() {
                 id="numberIcuBeds"
                 label={LABELS.numberIcuBeds}
                 variant="filled"
-                name="numberIcuBeds"
+                name="totalIcu"
                 fullWidth
                 disabled={!position}
                 inputRef={register({
@@ -188,8 +201,8 @@ function HospitalReistrationForm() {
                     message: MESSAGES.errorOnlyNumberAllowed,
                   },
                 })}
-                error={errors.numberIcuBeds}
-                helperText={errors.numberIcuBeds?.message}
+                error={errors.totalIcu}
+                helperText={errors.totalIcu?.message}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -201,7 +214,7 @@ function HospitalReistrationForm() {
                 id="numberOxygenUnits"
                 label={LABELS.numberOxygenUnits}
                 variant="filled"
-                name="numberOxygenUnits"
+                name="totalOxygenUnit"
                 fullWidth
                 disabled={!position}
                 inputRef={register({
@@ -211,8 +224,8 @@ function HospitalReistrationForm() {
                     message: MESSAGES.errorOnlyNumberAllowed,
                   },
                 })}
-                error={errors.numberOxygenUnits}
-                helperText={errors.numberOxygenUnits?.message}
+                error={errors.totalOxygenUnit}
+                helperText={errors.totalOxygenUnit?.message}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -224,7 +237,7 @@ function HospitalReistrationForm() {
                 id="numberVentilators"
                 label={LABELS.numberVentilators}
                 variant="filled"
-                name="numberVentilators"
+                name="totalVentilator"
                 fullWidth
                 disabled={!position}
                 inputRef={register({
@@ -234,8 +247,8 @@ function HospitalReistrationForm() {
                     message: MESSAGES.errorOnlyNumberAllowed,
                   },
                 })}
-                error={errors.numberVentilators}
-                helperText={errors.numberVentilators?.message}
+                error={errors.totalVentilator}
+                helperText={errors.totalVentilator?.message}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -247,21 +260,29 @@ function HospitalReistrationForm() {
                 id="contactNumber"
                 label={LABELS.contactNumber}
                 variant="filled"
-                name="hospitalContactNumber"
+                name="contactNo"
                 fullWidth
                 disabled={!position}
                 inputRef={register({
                   required: MESSAGES.errorNoBlank,
+                  minLength: {
+                    value: 10,
+                    message: "must be 10 characters",
+                  },
+                  maxLength: {
+                    value: 10,
+                    message: "must be 10 characters",
+                  },
                   pattern: {
                     value: /^[0-9]*$/,
                     message: MESSAGES.errorOnlyNumberAllowed,
                   },
                 })}
                 inputProps={{
-                  maxLength: 15,
+                  maxLength: 10,
                 }}
-                error={errors.hospitalContactNumber}
-                helperText={errors.hospitalContactNumber?.message}
+                error={errors.contactNo}
+                helperText={errors.contactNo?.message}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -312,23 +333,40 @@ function HospitalReistrationForm() {
                 }}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TextField
-                id="locationHospital"
+                id="lattitude"
                 required
-                label={LABELS.locationHospital}
+                label={LABELS.lattitude}
                 variant="filled"
                 disabled={!position}
                 inputProps={{
                   readOnly: true,
                 }}
-                name="locationHospital"
+                name="lattitude"
                 fullWidth
                 inputRef={register}
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={`latitude: ${position?.coords?.latitude}, longitude: ${position?.coords?.longitude}`}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                id="longitude"
+                required
+                label={LABELS.longitude}
+                variant="filled"
+                disabled={!position}
+                inputProps={{
+                  readOnly: true,
+                }}
+                name="longitude"
+                fullWidth
+                inputRef={register}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid item xs={12}>
